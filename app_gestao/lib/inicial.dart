@@ -1,4 +1,5 @@
 import 'package:app_gestao/compras.dart';
+import 'package:app_gestao/estoque.dart';
 import 'package:app_gestao/main.dart';
 import 'package:flutter/material.dart';
 
@@ -99,24 +100,63 @@ class TelaInicial extends StatelessWidget {
              ),
               const SizedBox(height: 20),
 
-              _buildButton(
-                
-                color: Colors.blue,
-                icon: Icons.inventory_2,
-                text: 'Estoque',
+             ElevatedButton(
+            style: ElevatedButton.styleFrom(
+            backgroundColor: const Color.fromARGB(255, 43, 91, 195),
+            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+            shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
               ),
+            ),
+           onPressed: () {
+            Navigator.push(
+                  context,
+                   MaterialPageRoute(builder: (context) => TelaProdutos()),
+                 );
+           },
+           child: Row(
+           children: [
+           Icon(Icons.inventory_2, color: const Color.fromARGB(255, 0, 0, 0),size: 30,),
+           SizedBox(width: 10),
+          Text(
+             'Estoque',
+              style: TextStyle(color: Colors.white, fontSize: 25,fontWeight: FontWeight.bold,),
+                ),
+               ],
+              ),
+             ),
 
               const SizedBox(height: 20),
 
-              _buildButton(
-                color: Colors.green,
-                icon: Icons.location_on,
-                text: 'Mapa',
+               ElevatedButton(
+            style: ElevatedButton.styleFrom(
+            backgroundColor: Color.fromARGB(255, 76, 175, 80),
+            padding: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+            shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
               ),
+            ),
+           onPressed: () {
+            Navigator.push(
+                  context,
+                   MaterialPageRoute(builder: (context) => telaCompras()),
+                 );
+           },
+           child: Row(
+           children: [
+           Icon(Icons.location_on, color: const Color.fromARGB(255, 0, 0, 0),size: 30,),
+           SizedBox(width: 10),
+          Text(
+             'Mapa',
+              style: TextStyle(color: Colors.white, fontSize: 25,fontWeight: FontWeight.bold,),
+                ),
+               ],
+              ),
+             ),
 
               const Spacer(),
 
-              // Botão volta
+              // Botão volta 
               InkWell(
                 onTap: () {
                   Navigator.push(
@@ -128,7 +168,7 @@ class TelaInicial extends StatelessWidget {
                   'voltar',
                   style: TextStyle(
                     color: Colors.white70,
-                    fontSize: 16,
+                    fontSize: 26,
                     fontStyle: FontStyle.italic,
                   ),
                 ),
@@ -140,7 +180,7 @@ class TelaInicial extends StatelessWidget {
     );
   }
 
-  // Widget reutilizável para os botões
+
   Widget _buildButton({
     required Color color,
     required IconData icon,

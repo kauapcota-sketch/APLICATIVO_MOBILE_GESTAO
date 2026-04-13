@@ -1,3 +1,4 @@
+import 'package:app_gestao/finalizarCompra.dart';
 import 'package:app_gestao/inicial.dart';
 import 'package:flutter/material.dart';
 
@@ -24,54 +25,86 @@ class telaCompras extends StatefulWidget {
   State<telaCompras> createState() => _PaginaCompras();
 }
 
-
 class _PaginaCompras extends State<telaCompras> {
+
+  TextEditingController _searchController = TextEditingController();
+
   final List<Map<String, String>> produtos = [
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3209/3209265.png",
+      "nome": "Soro Fisiológico 0,9% Sorimax - Farmax",
+      "img": "",
       "preco": "R\$ 263,29"
     },
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3771/3771551.png",
+      "nome": "Brometo de ipratrópio (0,02 mg e 0,25 mg)",
+      "img": "",
       "preco": "R\$ 19,99"
     },
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3771/3771556.png",
+      "nome": "Dipropionato de beclometasona",
+      "img": "",
       "preco": "R\$ 200,39"
     },
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3771/3771560.png",
+      "nome": "Glibenclamida (5 mg)",
+      "img": "",
       "preco": "R\$ 82,99"
     },
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3771/3771551.png",
+      "nome": "Insulina humana NPH",
+      "img": "",
       "preco": "R\$ 25,70"
     },
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3771/3771556.png",
+      "nome": "Besilato de anlodipino (5 mg)",
+      "img": "",
       "preco": "R\$ 9,29"
     },
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3771/3771560.png",
-      "preco": "R\$ 10,29"
+      "nome": "Captopril (25 mg)",
+      "img": "",
+      "preco": "R\$ 9,29"
     },
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3771/3771551.png",
-      "preco": "R\$ 79,99"
+      "nome": "Maleato de enalapril (10 mg)",
+      "img": "",
+      "preco": "R\$ 9,29"
     },
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3771/3771560.png",
-      "preco": "R\$ 57,39"
+      "nome": "Budesonida (32 mcg e 50 mcg)",
+      "img": "",
+      "preco": "R\$ 9,29"
     },
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3771/3771556.png",
-      "preco": "R\$ 32,70"
+      "nome": "Sinvastatina (10 mg, 20 mg e 40 mg)",
+      "img": "",
+      "preco": "R\$ 9,29"
     },
     {
-      "img": "https://cdn-icons-png.flaticon.com/512/3771/3771560.png",
-      "preco": "R\$ 51,99"
+      "nome": "Losartana potássica (50 mg)",
+      "img": "",
+      "preco": "R\$ 9,29"
     },
+    
   ];
+
+  List<Map<String, String>> produtosFiltrados = [];
+  List<Map<String, String>> carrinho = []; 
+
+  @override
+  void initState() {
+    super.initState();
+    produtosFiltrados = produtos;
+  }
+
+  void filtrar(String valor) {
+    setState(() {
+      produtosFiltrados = produtos.where((produto) {
+        final nome = produto["nome"]!.toLowerCase();
+        return nome.contains(valor.toLowerCase());
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,26 +113,25 @@ class _PaginaCompras extends State<telaCompras> {
       body: SafeArea(
         child: Column(
           children: [
-            // 🔝 Barra superior
+
+       
             Padding(
               padding: const EdgeInsets.all(10),
               child: Row(
                 children: [
-                 IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.white,),
-                  onPressed: () {
-                    Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => TelaInicial()),
-                );
-                  
-             
+                  IconButton(
+                    icon: Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => TelaInicial()),
+                      );
                     },
-                   ),
+                  ),
 
                   SizedBox(width: 10),
 
-                  // 🔍 Busca
+                  
                   Expanded(
                     child: Container(
                       height: 35,
@@ -107,29 +139,39 @@ class _PaginaCompras extends State<telaCompras> {
                         color: Colors.blueGrey[700],
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Row(
-                        children: [
-                          SizedBox(width: 10),
-                          Icon(Icons.search, color: Colors.white70),
-                        ],
+                      child: TextField(
+                        controller: _searchController,
+                        onChanged: filtrar,
+                        style: TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: "Buscar...",
+                          hintStyle: TextStyle(color: Colors.white70),
+                          prefixIcon: Icon(Icons.search, color: Colors.white70),
+                          border: InputBorder.none,
+
+                         
+                        ),
                       ),
+                      
                     ),
                   ),
 
                   SizedBox(width: 10),
 
-                  // 🛒 Carrinho 
                   Stack(
                     children: [
                       IconButton(
-                      icon: Icon(Icons.shopping_cart, color: Colors.white),
-                     onPressed: () {
-                       Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => TelaInicial()),
-                     );
-                    },
-                   ),
+                        icon: Icon(Icons.shopping_cart, color: Colors.white),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  TelaCarrinho(carrinho: carrinho),
+                            ),
+                          );
+                        },
+                      ),
                       Positioned(
                         right: 0,
                         child: Container(
@@ -139,7 +181,7 @@ class _PaginaCompras extends State<telaCompras> {
                             shape: BoxShape.circle,
                           ),
                           child: Text(
-                            '1',
+                            carrinho.length.toString(),  
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 10,
@@ -153,11 +195,12 @@ class _PaginaCompras extends State<telaCompras> {
               ),
             ),
 
-            // 🛍️ Lista de produtos
+          
+            
             Expanded(
               child: GridView.builder(
                 padding: EdgeInsets.all(10),
-                itemCount: produtos.length,
+                itemCount: produtosFiltrados.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 10,
@@ -165,29 +208,37 @@ class _PaginaCompras extends State<telaCompras> {
                   childAspectRatio: 0.8,
                 ),
                 itemBuilder: (context, index) {
-                  final produto = produtos[index];
+                  final produto = produtosFiltrados[index];
 
-                  return Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: EdgeInsets.all(8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.network(
-                          produto["img"]!,
-                          height: 70,
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        carrinho.add(produto);
+                      });
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content:
+                              Text("${produto["nome"]} adicionado ao carrinho"),
                         ),
-                        SizedBox(height: 10),
-                        Text(
-                          produto["preco"]!,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
+                      ); 
+                    },
+
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 255, 255, 255),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: EdgeInsets.all(8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.network(produto["img"]!, height: 70),
+                          SizedBox(height: 10),
+                          Text(produto["preco"]!),
+                          Text(produto["nome"]!),
+                        ],
+                      ),
                     ),
                   );
                 },
@@ -195,6 +246,7 @@ class _PaginaCompras extends State<telaCompras> {
             ),
           ],
         ),
+        
       ),
     );
   }

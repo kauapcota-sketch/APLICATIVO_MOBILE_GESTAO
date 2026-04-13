@@ -79,18 +79,18 @@ class _PaginaLogin extends State<LoginPage> {
              
              keyboardType: TextInputType.emailAddress,
              style: TextStyle(
-             color: Colors.white,
+             color: const Color.fromARGB(255, 255, 255, 255),
              ),
             decoration: InputDecoration(
             labelText: "E-mail",
-            labelStyle: TextStyle(color: Colors.white),
+            labelStyle: TextStyle(color: const Color.fromARGB(255, 255, 255, 255)),
             border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             ),
            focusedBorder: OutlineInputBorder(
            borderRadius: BorderRadius.circular(12),
            borderSide: BorderSide(
-           color: Colors.white,
+           color: const Color.fromARGB(255, 255, 255, 255),
            width: 2,
              ),
             ),

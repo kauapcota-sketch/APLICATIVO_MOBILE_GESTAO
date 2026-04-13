@@ -2,6 +2,7 @@
 
 import 'package:app_gestao/inicial.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,7 +47,7 @@ class telaCadastro extends StatefulWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Título
+              
               const Text(
                 'Gestão de estoque',
                 style: TextStyle(
@@ -82,7 +83,9 @@ class telaCadastro extends StatefulWidget {
 
               SizedBox(height: 30),
 
-              TextField(        
+              TextField(
+             controller: emailController,
+             
              keyboardType: TextInputType.emailAddress,
              style: TextStyle(
              color: Colors.white,
@@ -102,35 +105,40 @@ class telaCadastro extends StatefulWidget {
             ),
            ),
           ),
-              
 
-              SizedBox(height: 15),
+                SizedBox(height: 25),
 
-              // Campo Senha
              TextField(
-               controller: senhaController,
-               obscureText: _obscure,
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(
-                labelText: "Senha",
-                labelStyle: TextStyle(color: Colors.white,),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12)),
-                 focusedBorder:OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(12),
-                   borderSide: BorderSide(
-                   color: const Color.fromARGB(255, 255, 255, 255),
-                  width: 2,
-                 ),
-              ),
+             controller: senhaController,
+             obscureText: _obscure,
+              keyboardType: TextInputType.number, 
+             inputFormatters: [
+             FilteringTextInputFormatter.digitsOnly,
+             ],
+             style: TextStyle(
+             color: Colors.white,
+             ),
+            decoration: InputDecoration(
+            labelText: "Senha",
+            labelStyle: TextStyle(color: Colors.white),
+            border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
             ),
+           focusedBorder: OutlineInputBorder(
+           borderRadius: BorderRadius.circular(12),
+           borderSide: BorderSide(
+           color: Colors.white,
+           width: 2,
+             ),
             ),
+           ),
+          ),
 
-
-              SizedBox(height: 15),
+              SizedBox(height: 25),
 
           
-               TextField(        
+              TextField(
+             controller: enderecoController,            
              keyboardType: TextInputType.emailAddress,
              style: TextStyle(
              color: Colors.white,
@@ -150,6 +158,7 @@ class telaCadastro extends StatefulWidget {
             ),
            ),
           ),
+
            
 
               SizedBox(height: 40),
