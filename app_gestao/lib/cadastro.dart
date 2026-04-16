@@ -1,6 +1,7 @@
 
 
 import 'package:app_gestao/inicial.dart';
+import 'package:app_gestao/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -32,7 +33,8 @@ class telaCadastro extends StatefulWidget {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController senhaController = TextEditingController();
   final TextEditingController enderecoController = TextEditingController();
-  final  _obscure = true;
+
+  bool _obscure = true;
 
 
   
@@ -109,31 +111,39 @@ class telaCadastro extends StatefulWidget {
                 SizedBox(height: 25),
 
              TextField(
-             controller: senhaController,
-             obscureText: _obscure,
-              keyboardType: TextInputType.number, 
-             inputFormatters: [
-             FilteringTextInputFormatter.digitsOnly,
-             ],
-             style: TextStyle(
-             color: Colors.white,
-             ),
-            decoration: InputDecoration(
-            labelText: "Senha",
-            labelStyle: TextStyle(color: Colors.white),
-            border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+              controller: senhaController,
+              obscureText: _obscure,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: "Senha",
+                labelStyle: TextStyle(color: Colors.white),
+            
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscure ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscure = !_obscure;
+                    });
+                  },
+                ),
+            
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.white, width: 2),
+                ),
+              ),
             ),
-           focusedBorder: OutlineInputBorder(
-           borderRadius: BorderRadius.circular(12),
-           borderSide: BorderSide(
-           color: Colors.white,
-           width: 2,
-             ),
-            ),
-           ),
-          ),
-
+            
               SizedBox(height: 25),
 
           
@@ -168,10 +178,36 @@ class telaCadastro extends StatefulWidget {
                 children: [
               
              ElevatedButton(
-              onPressed: () {
+             onPressed: () {
+
+                String email = emailController.text.trim();
+              
+                if (email.isEmpty ||
+                    senhaController.text.isEmpty ||
+                    enderecoController.text.isEmpty) {
+              
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Preencha todos os campos")),
+                  );
+                  return;
+                }
+              
+                if (!email.endsWith("@gmail.com")) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Digite um email válido com @gmail.com")),
+                  );
+                  return;
+                }
+              
+               
                 Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaInicial()),
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(
+                      email: emailController.text,
+                      senha: senhaController.text,
+                    ),
+                  ),
                 );
               },
               style: ElevatedButton.styleFrom(

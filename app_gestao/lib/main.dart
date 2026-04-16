@@ -1,4 +1,3 @@
-
 import 'package:app_gestao/cadastro.dart';
 import 'package:app_gestao/inicial.dart';
 import 'package:flutter/material.dart';
@@ -21,23 +20,24 @@ class MyApp extends StatelessWidget {
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+  final String email;
+  final String senha;
+
+  const LoginPage({
+    super.key,
+    this.email = "",
+    this.senha = "",
+  });
 
   @override
   State<LoginPage> createState() => _PaginaLogin();
 }
 
 class _PaginaLogin extends State<LoginPage> {
-  final  _emailController = TextEditingController();
-  final  _senhaController = TextEditingController();
-  final  _obscure = true;
 
-@override
- String usuarioCorreto = "kaua";
-  String senhaCorreta = "1234";
-
-  
-  
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _senhaController = TextEditingController();
+  bool _obscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -75,6 +75,9 @@ class _PaginaLogin extends State<LoginPage> {
 
             
             TextField(
+              onTap: () {
+                
+              },
              controller: _emailController,
              
              keyboardType: TextInputType.emailAddress,
@@ -99,52 +102,62 @@ class _PaginaLogin extends State<LoginPage> {
 
             const SizedBox(height: 20),
 
-            TextField(
-             controller: _senhaController,
-             obscureText: _obscure,
-              keyboardType: TextInputType.number, 
-             inputFormatters: [
-             FilteringTextInputFormatter.digitsOnly,
-             ],
-             style: TextStyle(
-             color: Colors.white,
-             ),
-            decoration: InputDecoration(
-            labelText: "Senha",
-            labelStyle: TextStyle(color: Colors.white),
-            border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
+           TextField(
+              controller: _senhaController,
+              obscureText: _obscure,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+              ],
+              style: TextStyle(color: Colors.white),
+              decoration: InputDecoration(
+                labelText: "Senha",
+                labelStyle: TextStyle(color: Colors.white),
+            
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _obscure ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _obscure = !_obscure;
+                    });
+                  },
+                ),
+            
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.white, width: 2),
+                ),
+              ),
             ),
-           focusedBorder: OutlineInputBorder(
-           borderRadius: BorderRadius.circular(12),
-           borderSide: BorderSide(
-           color: Colors.white,
-           width: 2,
-             ),
-            ),
-           ),
-          ),
           
             const SizedBox(height: 50),
 
             ElevatedButton(
-            onPressed: () {
-              
-            if (_senhaController.text == "1234") {
-              Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => TelaInicial()),
-                );
-            ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Acesso liberado ")),
-            
+           onPressed: () {
+           if (_emailController.text == widget.email &&
+               _senhaController.text == widget.senha) {
+        
+             Navigator.push(
+               context,
+               MaterialPageRoute(builder: (context) => TelaInicial()),
              );
-            } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("Senha incorreta ")),
-              );
-             }
-            },
+        
+             ScaffoldMessenger.of(context).showSnackBar(
+               SnackBar(content: Text("Acesso liberado")),
+             );
+        
+           } else {
+             ScaffoldMessenger.of(context).showSnackBar(
+               SnackBar(content: Text("Senha ou usuário incorretos")),
+             );
+           }
+         },
             style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.all(16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),

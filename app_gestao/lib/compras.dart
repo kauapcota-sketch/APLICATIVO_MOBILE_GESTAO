@@ -106,6 +106,7 @@ class _PaginaCompras extends State<telaCompras> {
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,86 +115,126 @@ class _PaginaCompras extends State<telaCompras> {
         child: Column(
           children: [
 
-       
+         
+
             Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.arrow_back, color: Colors.white),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => TelaInicial()),
-                      );
-                    },
-                  ),
+  padding: const EdgeInsets.all(10),
+  child: Column(
+    children: [
 
-                  SizedBox(width: 10),
+      // 🔝 LINHA ORIGINAL (busca + ícones)
+      Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => TelaInicial()),
+              );
+            },
+          ),
 
-                  
-                  Expanded(
-                    child: Container(
-                      height: 35,
-                      decoration: BoxDecoration(
-                        color: Colors.blueGrey[700],
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: TextField(
-                        controller: _searchController,
-                        onChanged: filtrar,
-                        style: TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: "Buscar...",
-                          hintStyle: TextStyle(color: Colors.white70),
-                          prefixIcon: Icon(Icons.search, color: Colors.white70),
-                          border: InputBorder.none,
+          SizedBox(width: 10),
 
-                         
-                        ),
-                      ),
-                      
-                    ),
-                  ),
-
-                  SizedBox(width: 10),
-
-                  Stack(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.shopping_cart, color: Colors.white),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  TelaCarrinho(carrinho: carrinho),
-                            ),
-                          );
-                        },
-                      ),
-                      Positioned(
-                        right: 0,
-                        child: Container(
-                          padding: EdgeInsets.all(2),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            carrinho.length.toString(),  
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+          Expanded(
+            child: Container(
+              height: 35,
+              decoration: BoxDecoration(
+                color: Colors.blueGrey[700],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: TextField(
+                controller: _searchController,
+                onChanged: filtrar,
+                style: TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  hintText: "Buscar...",
+                  hintStyle: TextStyle(color: Colors.white70),
+                  prefixIcon: Icon(Icons.search, color: Colors.white70),
+                  border: InputBorder.none,
+                ),
               ),
             ),
+          ),
+
+          SizedBox(width: 10),
+
+          Stack(
+            children: [
+              IconButton(
+                icon: Icon(Icons.shopping_cart, color: Colors.white),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          TelaCarrinho(carrinho: carrinho),
+                    ),
+                  );
+                },
+              ),
+              Positioned(
+                right: 0,
+                child: Container(
+                  padding: EdgeInsets.all(2),
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    carrinho.length.toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+
+      SizedBox(height: 10),
+
+      // 🔥 DUAS CAIXAS (Remédios / Cosméticos)
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+
+          // REMÉDIOS
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.blueGrey[700],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              "Remédios",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+
+          SizedBox(width: 10),
+
+          // COSMÉTICOS
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.blueGrey[700],
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              "Cosméticos",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+),
 
           
             
