@@ -3,6 +3,7 @@ import 'package:app_gestao/inicial.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+
 void main() {
   runApp(const MyApp());
 }
@@ -140,9 +141,11 @@ class _PaginaLogin extends State<LoginPage> {
 
             ElevatedButton(
            onPressed: () {
+           
+           
            if (_emailController.text == widget.email &&
                _senhaController.text == widget.senha) {
-        
+
              Navigator.push(
                context,
                MaterialPageRoute(builder: (context) => TelaInicial()),
@@ -151,8 +154,10 @@ class _PaginaLogin extends State<LoginPage> {
              ScaffoldMessenger.of(context).showSnackBar(
                SnackBar(content: Text("Acesso liberado")),
              );
-        
-           } else {
+             
+           }
+           
+           else {
              ScaffoldMessenger.of(context).showSnackBar(
                SnackBar(content: Text("Senha ou usuário incorretos")),
              );

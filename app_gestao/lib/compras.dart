@@ -122,7 +122,7 @@ class _PaginaCompras extends State<telaCompras> {
   child: Column(
     children: [
 
-      // 🔝 LINHA ORIGINAL (busca + ícones)
+    
       Row(
         children: [
           IconButton(
@@ -198,12 +198,12 @@ class _PaginaCompras extends State<telaCompras> {
 
       SizedBox(height: 10),
 
-      // 🔥 DUAS CAIXAS (Remédios / Cosméticos)
+      
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
 
-          // REMÉDIOS
+         
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             decoration: BoxDecoration(
@@ -218,7 +218,7 @@ class _PaginaCompras extends State<telaCompras> {
 
           SizedBox(width: 10),
 
-          // COSMÉTICOS
+      
           Container(
             padding: EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             decoration: BoxDecoration(

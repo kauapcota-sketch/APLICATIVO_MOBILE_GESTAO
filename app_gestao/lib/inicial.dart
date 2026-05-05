@@ -1,6 +1,8 @@
 import 'package:app_gestao/compras.dart';
 import 'package:app_gestao/estoque.dart';
+import 'package:app_gestao/homeScreen.dart';
 import 'package:app_gestao/main.dart';
+import 'package:app_gestao/mapa.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -139,7 +141,7 @@ class TelaInicial extends StatelessWidget {
            onPressed: () {
             Navigator.push(
                   context,
-                   MaterialPageRoute(builder: (context) => telaCompras()),
+                   MaterialPageRoute(builder: (context) => const MapaPage()),
                  );
            },
            child: Row(
