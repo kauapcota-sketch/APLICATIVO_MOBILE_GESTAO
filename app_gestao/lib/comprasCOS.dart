@@ -1,4 +1,4 @@
-import 'package:app_gestao/comprasCOS.dart';
+import 'package:app_gestao/compras.dart';
 import 'package:app_gestao/finalizarCompra.dart';
 import 'package:app_gestao/inicial.dart';
 import 'package:flutter/material.dart';
@@ -14,79 +14,79 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const telaCompras(),
+      home: const telaComprascos(),
     );
   }
 }
 
-class telaCompras extends StatefulWidget {
+class telaComprascos extends StatefulWidget {
   final List<Map<String, String>>? carrinho;
 
-  const telaCompras({super.key, this.carrinho});
+  const telaComprascos({super.key, this.carrinho});
 
   @override
-  State<telaCompras> createState() => _PaginaCompras();
+  State<telaComprascos> createState() => _PaginaComprasCos();
 }
 
-class _PaginaCompras extends State<telaCompras> {
+class _PaginaComprasCos extends State<telaComprascos> {
 
   TextEditingController _searchController = TextEditingController();
 
   final List<Map<String, String>> produtos = [
     {
-      "nome": "Soro Fisiológico 0,9% Sorimax - Farmax",
+      "nome": "Protetor Solar FPS 50",
       "img": "",
-      "preco": "R\$ 263,29"
+      "preco": "R\$ 45,90"
     },
     {
-      "nome": "Brometo de ipratrópio (0,02 mg e 0,25 mg)",
+      "nome": "Hidratante Corporal",
       "img": "",
-      "preco": "R\$ 19,99"
+      "preco": "R\$ 32,50"
     },
     {
-      "nome": "Dipropionato de beclometasona",
+      "nome": "Shampoo Anticaspa",
       "img": "",
-      "preco": "R\$ 200,39"
+      "preco": "R\$ 18,90"
     },
     {
-      "nome": "Glibenclamida (5 mg)",
+      "nome": "Condicionador Hidratante",
       "img": "",
-      "preco": "R\$ 82,99"
+      "preco": "R\$ 20,00"
     },
     {
-      "nome": "Insulina humana NPH",
+      "nome": "Creme Facial Noturno",
       "img": "",
-      "preco": "R\$ 25,70"
+      "preco": "R\$ 89,90"
     },
     {
-      "nome": "Besilato de anlodipino (5 mg)",
+      "nome": "Sérum Vitamina C",
       "img": "",
-      "preco": "R\$ 9,29"
+      "preco": "R\$ 120,00"
     },
     {
-      "nome": "Captopril (25 mg)",
+      "nome": "Gel de Limpeza Facial",
       "img": "",
-      "preco": "R\$ 9,29"
+      "preco": "R\$ 35,00"
     },
     {
-      "nome": "Maleato de enalapril (10 mg)",
+      "nome": "Demaquilante Bifásico",
       "img": "",
-      "preco": "R\$ 9,29"
+      "preco": "R\$ 28,90"
     },
     {
-      "nome": "Budesonida (32 mcg e 50 mcg)",
+      "nome": "Desodorante Roll-on",
       "img": "",
-      "preco": "R\$ 9,29"
+      "preco": "R\$ 14,90"
     },
     {
-      "nome": "Sinvastatina (10 mg, 20 mg e 40 mg)",
+      "nome": "Sabonete Líquido Íntimo",
       "img": "",
-      "preco": "R\$ 9,29"
+      "preco": "R\$ 22,50"
     },
     {
-      "nome": "Losartana potássica (50 mg)",
+      "nome": "Óleo de Amêndoas",
       "img": "",
-      "preco": "R\$ 9,29"
+      "preco": "R\$ 55,00"
     },
   ];
 
@@ -200,10 +200,17 @@ class _PaginaCompras extends State<telaCompras> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => telaCompras(carrinho: carrinho),
+                            ),
+                          );
+                        },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blueGrey[700],
-                          foregroundColor: Colors.white,
+                          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
+                          foregroundColor: const Color.fromARGB(255, 255, 255, 255),
                           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
@@ -215,17 +222,10 @@ class _PaginaCompras extends State<telaCompras> {
                       SizedBox(width: 10),
 
                       ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => telaComprascos(carrinho: carrinho),
-                            ),
-                          );
-                        },
+                        onPressed: () {},
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 0, 0, 0),
-                          foregroundColor: const Color.fromARGB(255, 255, 255, 255),
+                          backgroundColor: Colors.blueGrey[700],
+                          foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),

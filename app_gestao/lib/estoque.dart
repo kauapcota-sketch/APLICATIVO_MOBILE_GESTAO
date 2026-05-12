@@ -1,39 +1,39 @@
-import 'package:app_gestao/inicial.dart';
+
+import 'package:app_gestao/lista.global.dart';
 import 'package:flutter/material.dart';
 
-class TelaProdutos extends StatelessWidget {
+class TelaProdutos extends StatefulWidget {
   const TelaProdutos({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final produtos = [
-      "Soro Fisiológico 0,9% Sorimax - Farmax",
-      "Brometo de ipratrópio (0,02 mg e 0,25 mg).",
-      "Dipropionato de beclometasona",
-      "Glibenclamida (5 mg)",
-      "Insulina humana NPH.",
-      "Besilato de anlodipino (5 mg).",
-      "Captopril (25 mg).",
-      "Maleato de enalapril (10 mg).",
-      "Budesonida (32 mcg e 50 mcg).",
-      "Sinvastatina (10 mg, 20 mg e 40 mg).",
-      "Losartana potássica (50 mg).",
-    ];
+  State<TelaProdutos> createState() => _TelaProdutosState();
+}
 
+class _TelaProdutosState extends State<TelaProdutos> {
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Color(0xFF0A1A33),
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        elevation: 0,  
-        
-          ),
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: Text(
+          "Estoque",
+          style: TextStyle(color: Colors.black),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "produtos :",
+              "Produtos comprados:",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 24,
@@ -43,24 +43,34 @@ class TelaProdutos extends StatelessWidget {
             ),
             SizedBox(height: 16),
 
-           
-            Expanded(
-              child: ListView.builder(
-                itemCount: produtos.length,
-                itemBuilder: (context, index) {
-                  return _cardProduto(produtos[index]);
-                },
-              ),
-            ),
-
-            
+            estoqueGlobal.isEmpty
+                ? Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 40),
+                      child: Text(
+                        "Nenhuma compra finalizada ainda.",
+                        style: TextStyle(color: Colors.white70, fontSize: 16),
+                      ),
+                    ),
+                  )
+                : Expanded(
+                    child: ListView.builder(
+                      itemCount: estoqueGlobal.length,
+                      itemBuilder: (context, index) {
+                        return _cardProduto(
+                          estoqueGlobal[index]["nome"]!,
+                          estoqueGlobal[index]["preco"]!,
+                        );
+                      },
+                    ),
+                  ),
           ],
         ),
       ),
     );
   }
 
-  Widget _cardProduto(String texto) {
+  Widget _cardProduto(String nome, String preco) {
     return Container(
       margin: EdgeInsets.only(bottom: 12),
       padding: EdgeInsets.all(16),
@@ -80,13 +90,27 @@ class TelaProdutos extends StatelessWidget {
           Icon(Icons.medication, color: Colors.white),
           SizedBox(width: 12),
           Expanded(
-            child: Text(
-              texto,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontStyle: FontStyle.italic,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  nome,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  preco,
+                  style: TextStyle(
+                    color: Color(0xFF9CD323),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
         ],

@@ -1,5 +1,6 @@
-import 'package:app_gestao/compras.dart';
 import 'package:app_gestao/estoque.dart';
+import 'package:app_gestao/lista.global.dart';
+
 import 'package:flutter/material.dart';
 
 class TelaCarrinho extends StatefulWidget {
@@ -37,7 +38,7 @@ class _TelaCarrinhoState extends State<TelaCarrinho> {
         title: Text("Carrinho"),
         backgroundColor: Color(0xFF162544),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -52,7 +53,6 @@ class _TelaCarrinhoState extends State<TelaCarrinho> {
           : Column(
               children: [
 
-                
                 Expanded(
                   child: ListView.builder(
                     itemCount: widget.carrinho.length,
@@ -62,11 +62,8 @@ class _TelaCarrinhoState extends State<TelaCarrinho> {
                       return Card(
                         margin: EdgeInsets.all(10),
                         child: ListTile(
-               
                           title: Text(produto["nome"]!),
                           subtitle: Text(produto["preco"]!),
-
-                        
                           trailing: IconButton(
                             icon: Icon(Icons.delete),
                             onPressed: () {
@@ -83,7 +80,6 @@ class _TelaCarrinhoState extends State<TelaCarrinho> {
 
                 SizedBox(height: 10),
 
-            
                 Text(
                   "Total: R\$ ${calcularTotal().toStringAsFixed(2).replaceAll(".", ",")}",
                   style: TextStyle(
@@ -95,7 +91,6 @@ class _TelaCarrinhoState extends State<TelaCarrinho> {
 
                 SizedBox(height: 15),
 
-           
                 Text(
                   "Formas de pagamento:",
                   style: TextStyle(
@@ -124,14 +119,23 @@ class _TelaCarrinhoState extends State<TelaCarrinho> {
                     padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                   ),
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Compra finalizada! 🛍️")),
+                    // Adiciona os produtos comprados na lista global
+                   estoqueGlobal.addAll(widget.carrinho);
+
+                    // Limpa o carrinho
+                    setState(() {
+                      widget.carrinho.clear();
+                    });
+
+                    // Navega para o estoque
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TelaProdutos(),
+                      ),
                     );
                   },
-                  child: Text(
-                    
-                    "Finalizar compra"
-                    ),
+                  child: Text("Finalizar compra"),
                 ),
 
                 SizedBox(height: 15),
@@ -140,7 +144,6 @@ class _TelaCarrinhoState extends State<TelaCarrinho> {
     );
   }
 
-  
   Widget _pagamento(String nome) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

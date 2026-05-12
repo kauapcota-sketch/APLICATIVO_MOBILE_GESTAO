@@ -6,10 +6,11 @@ import '../modelos/contagemData.dart';
 import '../database/database.dart';
 
 class ContagemService {
-  // Troque pelo IP da sua máquina se for rodar no celular físico
-  // Em emulador Android use: 10.0.2.2
-  // Em emulador iOS use: 127.0.0.1
-  static const String _baseUrl = 'http://10.0.2.2:3000';
+  // Flutter Web (Chrome): usa localhost
+  // Emulador Android: 10.0.2.2
+  // Emulador iOS: 127.0.0.1
+  // Celular físico: IP local da máquina (ex: 192.168.1.X)
+  static const String _baseUrl = 'http://localhost:3000';
 
   final DatabaseHelper _db = DatabaseHelper.instance;
 

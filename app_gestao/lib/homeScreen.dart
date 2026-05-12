@@ -30,9 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     _carregarDados();
   }
 
-  // ─────────────────────────────────────────────
-  //  CARREGAMENTO
-  // ─────────────────────────────────────────────
+
 
   Future<void> _carregarDados() async {
     setState(() { _carregando = true; _erro = null; });
@@ -69,9 +67,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() { _pontos = pontos; _carregando = false; });
   }
 
-  // ─────────────────────────────────────────────
-  //  UI
-  // ─────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ─── Card Cidade ───
+
 
   Widget _cardCidade() {
     final c = _cidade!;
@@ -146,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ─── Card Demográficos ───
+
 
   Widget _cardDemograficos() {
     final d = _demograficos!;
@@ -189,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ─── Filtros de Categoria ───
+
 
   Widget _filtrosCategorias() {
     return SizedBox(
@@ -211,7 +206,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ─── Card Ponto ───
+
 
   Widget _cardPonto(PontoReferencia p) {
     final icones = {
