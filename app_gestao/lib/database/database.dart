@@ -1,7 +1,7 @@
-import '../modelos/contagemData.dart';
-import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
+import '../modelos/contagemData.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -21,23 +21,15 @@ class DatabaseHelper {
 
     return await openDatabase(
       path,
-      version: 2,             // versão 2 — novas tabelas adicionadas
+      version: 3,
       onCreate: _createDB,
       onUpgrade: _onUpgrade,
     );
   }
 
-  Future _createDB(Database db, int version) async {
-    // Tabela original de usuários
-    await db.execute('''
-      CREATE TABLE users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        email TEXT
-      )
-    ''');
+  Future<void> _createDB(Database db, int version) async {
+    await _createUsersTable(db);
 
-    // Tabela da cidade
     await db.execute('''
       CREATE TABLE cidade (
         id INTEGER PRIMARY KEY,
@@ -54,7 +46,6 @@ class DatabaseHelper {
       )
     ''');
 
-    // Tabela de dados demográficos
     await db.execute('''
       CREATE TABLE demograficos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -68,7 +59,6 @@ class DatabaseHelper {
       )
     ''');
 
-    // Tabela de pontos de referência
     await db.execute('''
       CREATE TABLE pontos (
         id INTEGER PRIMARY KEY,
@@ -85,17 +75,35 @@ class DatabaseHelper {
     ''');
   }
 
-  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+  Future<void> _createUsersTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT,
+        email TEXT UNIQUE,
+        senha TEXT,
+        endereco TEXT,
+        criado_em TEXT
+      )
+    ''');
+  }
+
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
     if (oldVersion < 2) {
       await db.execute('ALTER TABLE users ADD COLUMN age INTEGER');
 
       await db.execute('''
         CREATE TABLE IF NOT EXISTS cidade (
           id INTEGER PRIMARY KEY,
-          nome TEXT, estado TEXT, uf TEXT,
-          regiao TEXT, gentilico TEXT,
-          latitude REAL, longitude REAL,
-          area_km2 REAL, ddd INTEGER,
+          nome TEXT,
+          estado TEXT,
+          uf TEXT,
+          regiao TEXT,
+          gentilico TEXT,
+          latitude REAL,
+          longitude REAL,
+          area_km2 REAL,
+          ddd INTEGER,
           atualizado_em TEXT
         )
       ''');
@@ -116,19 +124,25 @@ class DatabaseHelper {
       await db.execute('''
         CREATE TABLE IF NOT EXISTS pontos (
           id INTEGER PRIMARY KEY,
-          nome TEXT, categoria TEXT,
-          endereco TEXT, telefone TEXT,
-          horario TEXT, latitude REAL,
-          longitude REAL, avaliacao REAL,
+          nome TEXT,
+          categoria TEXT,
+          endereco TEXT,
+          telefone TEXT,
+          horario TEXT,
+          latitude REAL,
+          longitude REAL,
+          avaliacao REAL,
           atualizado_em TEXT
         )
       ''');
     }
-  }
 
-  // ─────────────────────────────────────────────
-  //  CIDADE
-  // ─────────────────────────────────────────────
+    if (oldVersion < 3) {
+      await db.execute('ALTER TABLE users ADD COLUMN senha TEXT');
+      await db.execute('ALTER TABLE users ADD COLUMN endereco TEXT');
+      await db.execute('ALTER TABLE users ADD COLUMN criado_em TEXT');
+    }
+  }
 
   Future<void> inserirOuAtualizarCidade(Map<String, dynamic> data) async {
     final db = await instance.database;
@@ -158,14 +172,10 @@ class DatabaseHelper {
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  DEMOGRAFICOS
-  // ─────────────────────────────────────────────
-
   Future<void> inserirOuAtualizarDemograficos(
-      Map<String, dynamic> data) async {
+    Map<String, dynamic> data,
+  ) async {
     final db = await instance.database;
-    // apaga o registro anterior e insere o novo
     await db.delete('demograficos');
     await db.insert(
       'demograficos',
@@ -188,10 +198,6 @@ class DatabaseHelper {
     );
   }
 
-  // ─────────────────────────────────────────────
-  //  PONTOS DE REFERÊNCIA
-  // ─────────────────────────────────────────────
-
   Future<void> inserirOuAtualizarPonto(Map<String, dynamic> data) async {
     final db = await instance.database;
     await db.insert(
@@ -204,22 +210,27 @@ class DatabaseHelper {
   Future<List<PontoReferencia>> getPontosLocal({String? categoria}) async {
     final db = await instance.database;
     final result = categoria != null
-        ? await db.query('pontos',
-            where: 'categoria = ?', whereArgs: [categoria])
+        ? await db.query(
+            'pontos',
+            where: 'categoria = ?',
+            whereArgs: [categoria],
+          )
         : await db.query('pontos');
 
     return result
-        .map((r) => PontoReferencia(
-              id: r['id'] as int,
-              nome: r['nome'] as String,
-              categoria: r['categoria'] as String,
-              endereco: r['endereco'] as String,
-              telefone: r['telefone'] as String?,
-              horario: r['horario'] as String?,
-              latitude: r['latitude'] as double,
-              longitude: r['longitude'] as double,
-              avaliacao: r['avaliacao'] as double?,
-            ))
+        .map(
+          (r) => PontoReferencia(
+            id: r['id'] as int,
+            nome: r['nome'] as String,
+            categoria: r['categoria'] as String,
+            endereco: r['endereco'] as String,
+            telefone: r['telefone'] as String?,
+            horario: r['horario'] as String?,
+            latitude: r['latitude'] as double,
+            longitude: r['longitude'] as double,
+            avaliacao: r['avaliacao'] as double?,
+          ),
+        )
         .toList();
   }
 
@@ -228,18 +239,45 @@ class DatabaseHelper {
     return await db.delete('pontos', where: 'id = ?', whereArgs: [id]);
   }
 
-  // ─────────────────────────────────────────────
-  //  USUÁRIOS (original)
-  // ─────────────────────────────────────────────
-
   Future<int> createUser(Map<String, dynamic> user) async {
     final db = await instance.database;
-    return await db.insert('users', user);
+    return await db.insert(
+      'users',
+      {...user, 'criado_em': DateTime.now().toIso8601String()},
+      conflictAlgorithm: ConflictAlgorithm.abort,
+    );
   }
 
   Future<List<Map<String, dynamic>>> getUsers() async {
     final db = await instance.database;
     return await db.query('users');
+  }
+
+  Future<Map<String, dynamic>?> getUserByEmail(String email) async {
+    final db = await instance.database;
+    final result = await db.query(
+      'users',
+      where: 'email = ?',
+      whereArgs: [email],
+      limit: 1,
+    );
+    if (result.isEmpty) return null;
+    return result.first;
+  }
+
+  Future<Map<String, dynamic>?> getUserByEmailAndSenha({
+    required String email,
+    required String senha,
+  }) async {
+    final db = await instance.database;
+    final result = await db.query(
+      'users',
+      where: 'email = ? AND senha = ?',
+      whereArgs: [email, senha],
+      limit: 1,
+    );
+    if (result.isEmpty) return null;
+    return result.first;
   }
 
   Future<int> deleteUser(int id) async {

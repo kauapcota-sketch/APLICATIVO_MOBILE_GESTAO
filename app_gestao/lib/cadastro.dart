@@ -1,4 +1,4 @@
-import 'package:app_gestao/inicial.dart';
+import 'package:app_gestao/database/database.dart';
 import 'package:app_gestao/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,17 +14,17 @@ class telaCadastro extends StatefulWidget {
 
 class _PaginaCadastro extends State<telaCadastro> {
   // Controllers dos campos
-  final TextEditingController emailController    = TextEditingController();
-  final TextEditingController senhaController    = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController senhaController = TextEditingController();
   final TextEditingController enderecoController = TextEditingController();
-  final TextEditingController buscaController    = TextEditingController();
+  final TextEditingController buscaController = TextEditingController();
 
   // Dados da API
   late Future<List<User>> futureUsers;
-  List<User> allUsers      = [];
+  List<User> allUsers = [];
   List<User> filteredUsers = [];
 
-  bool _obscure  = true;
+  bool _obscure = true;
   bool _salvando = false;
 
   @override
@@ -39,7 +39,7 @@ class _PaginaCadastro extends State<telaCadastro> {
     futureUsers = ApiService.fetchUsers(); // faz a requisição
     futureUsers.then((data) {
       setState(() {
-        allUsers      = data; // guarda dados da API
+        allUsers = data; // guarda dados da API
         filteredUsers = data; // usa dados da API
       });
     });
@@ -48,8 +48,7 @@ class _PaginaCadastro extends State<telaCadastro> {
   void search(String text) {
     setState(() {
       filteredUsers = allUsers // filtra dados da API (não chama API)
-          .where((user) =>
-              user.name.toLowerCase().contains(text.toLowerCase()))
+          .where((user) => user.name.toLowerCase().contains(text.toLowerCase()))
           .toList();
     });
   }
@@ -63,9 +62,9 @@ class _PaginaCadastro extends State<telaCadastro> {
 
   // ─── CADASTRAR ─────────────────────────────────
 
-  void _cadastrar() {
-    final email    = emailController.text.trim();
-    final senha    = senhaController.text.trim();
+  Future<void> _cadastrar() async {
+    final email = emailController.text.trim();
+    final senha = senhaController.text.trim();
     final endereco = enderecoController.text.trim();
 
     if (email.isEmpty || senha.isEmpty || endereco.isEmpty) {
@@ -75,14 +74,81 @@ class _PaginaCadastro extends State<telaCadastro> {
       return;
     }
 
-    if (!email.endsWith("@gmail.com")) {
+      if (!email.endsWith("@gmail.com")) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text("Digite um email válido com @gmail.com")),
+        const SnackBar(content: Text("Digite um email válido com @gmail.com")),
       );
       return;
     }
 
+    setState(() => _salvando = true);
+
+    try {
+      final usuarioExistente =
+          await DatabaseHelper.instance.getUserByEmail(email);
+      if (usuarioExistente != null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Este email ja esta cadastrado")),
+        );
+        return;
+      }
+
+      await DatabaseHelper.instance.createUser({
+        'name': email.split('@').first,
+        'email': email,
+        'senha': senha,
+        'endereco': endereco,
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro ao salvar cadastro: $e")),
+      );
+      return;
+    } finally {
+      if (mounted) {
+        setState(() => _salvando = false);
+      }
+    }
+
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Cadastro realizado com sucesso!")),
+    );
+
+    setState(() => _salvando = true);
+
+    try {
+      final usuarioExistente =
+          await DatabaseHelper.instance.getUserByEmail(email);
+      if (usuarioExistente != null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Este email ja esta cadastrado")),
+        );
+        return;
+      }
+
+      await DatabaseHelper.instance.createUser({
+        'name': email.split('@').first,
+        'email': email,
+        'senha': senha,
+        'endereco': endereco,
+      });
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro ao salvar cadastro: $e")),
+      );
+      return;
+    } finally {
+      if (mounted) {
+        setState(() => _salvando = false);
+      }
+    }
+
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Cadastro realizado com sucesso!")),
     );
@@ -107,7 +173,6 @@ class _PaginaCadastro extends State<telaCadastro> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // Títulos
               const Text('Gestão de estoque',
                   style: TextStyle(
@@ -143,8 +208,7 @@ class _PaginaCadastro extends State<telaCadastro> {
                       borderRadius: BorderRadius.circular(12)),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                        const BorderSide(color: Colors.white, width: 2),
+                    borderSide: const BorderSide(color: Colors.white, width: 2),
                   ),
                 ),
               ),
@@ -162,19 +226,15 @@ class _PaginaCadastro extends State<telaCadastro> {
                   labelStyle: const TextStyle(color: Colors.white),
                   suffixIcon: IconButton(
                     icon: Icon(
-                        _obscure
-                            ? Icons.visibility_off
-                            : Icons.visibility,
+                        _obscure ? Icons.visibility_off : Icons.visibility,
                         color: Colors.white),
-                    onPressed: () =>
-                        setState(() => _obscure = !_obscure),
+                    onPressed: () => setState(() => _obscure = !_obscure),
                   ),
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12)),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                        const BorderSide(color: Colors.white, width: 2),
+                    borderSide: const BorderSide(color: Colors.white, width: 2),
                   ),
                 ),
               ),
@@ -191,8 +251,7 @@ class _PaginaCadastro extends State<telaCadastro> {
                       borderRadius: BorderRadius.circular(12)),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide:
-                        const BorderSide(color: Colors.white, width: 2),
+                    borderSide: const BorderSide(color: Colors.white, width: 2),
                   ),
                 ),
               ),
@@ -217,8 +276,8 @@ class _PaginaCadastro extends State<telaCadastro> {
                             child: CircularProgressIndicator(
                                 color: Colors.white, strokeWidth: 2))
                         : const Text("Cadastrar",
-                            style: TextStyle(
-                                fontSize: 18, color: Colors.white)),
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.white)),
                   ),
                   Image.network(
                     'https://cdn-icons-png.flaticon.com/512/4140/4140048.png',
@@ -239,11 +298,9 @@ class _PaginaCadastro extends State<telaCadastro> {
                 decoration: InputDecoration(
                   hintText: 'Buscar usuário da API...',
                   hintStyle: const TextStyle(color: Colors.white38),
-                  prefixIcon:
-                      const Icon(Icons.search, color: Colors.white54),
+                  prefixIcon: const Icon(Icons.search, color: Colors.white54),
                   suffixIcon: IconButton(
-                    icon: const Icon(Icons.refresh,
-                        color: Colors.white54),
+                    icon: const Icon(Icons.refresh, color: Colors.white54),
                     onPressed: refresh, // recarrega API
                   ),
                   filled: true,
@@ -260,17 +317,15 @@ class _PaginaCadastro extends State<telaCadastro> {
                 child: FutureBuilder<List<User>>(
                   future: futureUsers, // futuro da API
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState ==
-                        ConnectionState.waiting) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(
-                          child: CircularProgressIndicator(
-                              color: Colors.white));
+                          child:
+                              CircularProgressIndicator(color: Colors.white));
                     }
                     if (snapshot.hasError) {
                       return Center(
                           child: Text('Erro: ${snapshot.error}',
-                              style: const TextStyle(
-                                  color: Colors.red)));
+                              style: const TextStyle(color: Colors.red)));
                     }
                     return ListView.builder(
                       itemCount: filteredUsers.length, // dados da API
@@ -279,19 +334,16 @@ class _PaginaCadastro extends State<telaCadastro> {
                         return ListTile(
                           leading: const CircleAvatar(
                               backgroundColor: Colors.blue,
-                              child: Icon(Icons.person,
-                                  color: Colors.white)),
+                              child: Icon(Icons.person, color: Colors.white)),
                           title: Text(user.name, // dado da API
-                              style: const TextStyle(
-                                  color: Colors.white)),
+                              style: const TextStyle(color: Colors.white)),
                           subtitle: Text(user.email, // dado da API
-                              style: const TextStyle(
-                                  color: Colors.white54)),
+                              style: const TextStyle(color: Colors.white54)),
                           onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) =>
-                                    UserDetailPage(user: user)), // envia dado da API
+                                builder: (_) => UserDetailPage(
+                                    user: user)), // envia dado da API
                           ),
                         );
                       },
@@ -339,9 +391,9 @@ class UserDetailPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _detalhe(Icons.email,    'Email',    user.email),
-            _detalhe(Icons.phone,    'Telefone', user.phone),
-            _detalhe(Icons.business, 'Empresa',  user.company),
+            _detalhe(Icons.email, 'Email', user.email),
+            _detalhe(Icons.phone, 'Telefone', user.phone),
+            _detalhe(Icons.business, 'Empresa', user.company),
           ],
         ),
       ),
@@ -356,11 +408,9 @@ class UserDetailPage extends StatelessWidget {
         const SizedBox(width: 12),
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text(label,
-              style: const TextStyle(
-                  color: Colors.white54, fontSize: 12)),
+              style: const TextStyle(color: Colors.white54, fontSize: 12)),
           Text(valor,
-              style: const TextStyle(
-                  color: Colors.white, fontSize: 16)),
+              style: const TextStyle(color: Colors.white, fontSize: 16)),
         ]),
       ]),
     );

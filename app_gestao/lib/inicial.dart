@@ -88,7 +88,7 @@ class TelaInicial extends StatelessWidget {
                     Icon(Icons.shopping_cart, color: Colors.black, size: 30),
                     SizedBox(width: 10),
                     Text(
-                      'Produtos',
+                      'Produtoss',
                       style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   ],
@@ -117,7 +117,7 @@ class TelaInicial extends StatelessWidget {
                     Icon(Icons.inventory_2, color: Colors.black, size: 30),
                     SizedBox(width: 10),
                     Text(
-                      'Estoque',
+                      'Histórico de compras',
                       style: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
                     ),
                   ],
